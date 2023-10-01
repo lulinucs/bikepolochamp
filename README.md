@@ -21,12 +21,3 @@ Este é um aplicativo em React Native que está em desenvolvimento para facilita
 - Estatísticas Detalhadas: Adicionar recursos para rastrear estatísticas detalhadas de jogadores e equipes, como gols marcados, gols sofridos e muito mais.
 
 - Personalização: Possibilidade de personalizar as configurações do torneio, como número de equipes, formato do torneio e critérios de desempate.
-
-## Como Contribuir
-
-Este projeto é de código aberto e aceita contribuições da comunidade. Se você deseja contribuir, siga estas etapas:
-
-1. Faça um fork do repositório Bike Polo Champ.
-
-2. Clone o repositório fork para o seu ambiente de desenvolvimento:
-
