@@ -4,9 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function TabelaClassificacaoComponent() {
   const [equipes, setEquipes] = useState([]);
+  const [classificacao, setClassificacao] = useState([]);
 
   useEffect(() => {
-    const fetchEquipes   = async () => {
+    const fetchEquipes = async () => {
       try {
         const equipesData = await AsyncStorage.getItem('equipes');
         if (equipesData) {
@@ -20,6 +21,34 @@ function TabelaClassificacaoComponent() {
     fetchEquipes();
   }, []);
 
+  useEffect(() => {
+    const obterInformacoesDeClassificacao = () => {
+      const equipesOrdenadas = ordenarEquipes(equipes);
+      const classificacao = equipesOrdenadas.map((equipe, index) => ({
+        colocacao: index + 1,
+        nomeEquipe: equipe.nomeEquipe,
+      }));
+      return classificacao;
+    };
+
+    const salvarInformacoesNoAsyncStorage = async () => {
+      const classificacao = obterInformacoesDeClassificacao();
+      try {
+        await AsyncStorage.setItem('classificacao', JSON.stringify(classificacao));
+        setClassificacao(classificacao); // Atualiza o estado com a classificação
+      } catch (error) {
+        console.error('Erro ao salvar informações de classificação no AsyncStorage:', error);
+      }
+    };
+
+    salvarInformacoesNoAsyncStorage();
+  }, [equipes]);
+
+  // Efeito para imprimir a classificação no console.log quando a página é renderizada
+  useEffect(() => {
+    console.log('Classificação no console:', classificacao);
+  }, [classificacao]);
+
   const ordenarEquipes = (equipes) => {
     // Ordena as equipes por pontos e saldo de gols
     return equipes.sort((a, b) => {
@@ -32,32 +61,6 @@ function TabelaClassificacaoComponent() {
       }
     });
   };
-
-  // Função para retornar as informações de classificação
-  const obterInformacoesDeClassificacao = () => {
-    const equipesOrdenadas = ordenarEquipes(equipes);
-    const classificacao = [];
-
-    equipesOrdenadas.forEach((equipe, index) => {
-      classificacao.push({ colocacao: index + 1, nomeEquipe: equipe.nomeEquipe });
-    });
-
-    return classificacao;
-  };
-
-  // Salvar as informações de classificação no AsyncStorage
-  useEffect(() => {
-    const salvarInformacoesNoAsyncStorage = async () => {
-      const classificacao = obterInformacoesDeClassificacao();
-      try {
-        await AsyncStorage.setItem('classificacao', JSON.stringify(classificacao));
-      } catch (error) {
-        console.error('Erro ao salvar informações de classificação no AsyncStorage:', error);
-      }
-    };
-
-    salvarInformacoesNoAsyncStorage();
-  }, [equipes]);
 
   return (
     <ScrollView>
